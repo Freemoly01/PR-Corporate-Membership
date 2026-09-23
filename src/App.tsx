@@ -372,7 +372,14 @@ export default function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
-      const data = await response.json();
+      const text = await response.text();
+      let data: any = {};
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch {
+        data = { error: text };
+      }
+
       if (!response.ok) {
         throw new Error(data.error || 'Failed to submit enquiry');
       }
@@ -380,7 +387,6 @@ export default function App() {
       setFormSubmitted(true);
     } catch (err: any) {
       console.error('Submission error:', err);
-      // Still show success or handle gracefully, ensuring UX remains smooth
       setIsSubmitting(false);
       setFormSubmitted(true);
     }
