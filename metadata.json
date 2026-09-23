@@ -1,0 +1,6 @@
+{
+  "name": "Perth Racing Corporate Membership",
+  "description": "Perth Racing 2026-2027 Corporate Membership — Your Place at the Track across Ascot and Belmont Park.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
