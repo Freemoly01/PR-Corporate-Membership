@@ -1,13 +1,9 @@
 // functions/api/hubspot-submit.ts
 
-interface Env {
-  HUBSPOT_ACCESS_TOKEN: string;
-}
-
-export const onRequestPost: PagesFunction<Env> = async (context) => {
+export const onRequestPost = async (context: any) => {
   try {
     // 1. Grab the information the user typed into the frontend form
-    const body = await context.request.json<any>();
+    const body = await context.request.json();
     const { firstName, lastName, email, phone, message } = body;
     
     // 2. Fetch the secret token from your Cloudflare environment variables
@@ -39,13 +35,13 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     // 4. Check if HubSpot rejected the data (e.g., invalid email format)
     if (!response.ok) {
-      const errorData = await response.json<any>();
-      throw new Error(errorData.message || 'Failed to submit to HubSpot');
+      const errorData = await response.json();
+      throw new Error((errorData as any).message || 'Failed to submit to HubSpot');
     }
 
     // 5. Success! Tell the frontend the contact was created.
-    const data = await response.json<any>();
-    return Response.json({ success: true, contactId: data.id });
+    const data = await response.json();
+    return Response.json({ success: true, contactId: (data as any).id });
     
   } catch (error: any) {
     console.error('HubSpot Error:', error);

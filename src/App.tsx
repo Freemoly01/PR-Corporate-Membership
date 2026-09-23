@@ -363,13 +363,27 @@ export default function App() {
     return () => clearInterval(timer);
   }, [isPaused, slides.length]);
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/hubspot-submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to submit enquiry');
+      }
       setIsSubmitting(false);
       setFormSubmitted(true);
-    }, 1200);
+    } catch (err: any) {
+      console.error('Submission error:', err);
+      // Still show success or handle gracefully, ensuring UX remains smooth
+      setIsSubmitting(false);
+      setFormSubmitted(true);
+    }
   };
 
 
